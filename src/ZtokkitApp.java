@@ -3,10 +3,8 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
-import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.style.lines.SeriesLines;
-import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
@@ -16,13 +14,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainShit {
+public class ZtokkitApp {
 
     //https://github.com/timmolter/XChart
 
     public static void main(String[] args) {
 
+	JFrame mainFrame = new ZtokkitFrame();
 
+
+	/*
 	List<HistoricalStock> stocks = null;
 	try {
 	    stocks = StockDownloader.downloadStocks("INTC", 2000);
@@ -77,6 +78,8 @@ public class MainShit {
 		frame.setVisible(true);
 	    }
 	});
+
+	*/
     }
 
 }
