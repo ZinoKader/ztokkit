@@ -2,10 +2,18 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.Styler.LegendPosition;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.Marker;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainShit {
@@ -13,28 +21,39 @@ public class MainShit {
     //https://github.com/timmolter/XChart
 
     public static void main(String[] args) {
-	List<HistoricalStock> stocks = StockDownloader.downloadStocks("AAPL", 2014);
+
+
+	List<HistoricalStock> stocks = null;
+	try {
+	    stocks = StockDownloader.downloadStocks("INTC", 2000);
+	} catch (ParseException e) {
+	    e.printStackTrace();
+	}
 
 	if(stocks.isEmpty()) {
 	    System.out.println("No stocks found for the specified date bounds!");
 	}
 
+
+	// Create Chart
+	final XYChart chart = new XYChartBuilder().width(1100).height(800).title("Intel Stocks").xAxisTitle("Year").yAxisTitle("Price").build();
+
+	// Customize Chart
+	chart.getStyler().setLegendPosition(LegendPosition.InsideSE);
+	chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Line);
+
+	List<Date> xData = new ArrayList<>();
+	List<Double> yData = new ArrayList<>();
+
 	for(HistoricalStock stock : stocks) {
-	    System.out.println(stock);
+	    xData.add(stock.getDate());
+	    yData.add(stock.getAdjustedClose());
 	}
 
 
-	// Create Chart
-	final XYChart chart = new XYChartBuilder().width(600).height(400).title("Area Chart").xAxisTitle("X").yAxisTitle("Y").build();
-
-	// Customize Chart
-	chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
-	chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
-
-	// Series
-	chart.addSeries("a", new double[] { 0, 3, 5, 7, 9 }, new double[] { -3, 5, 9, 6, 5 });
-	chart.addSeries("b", new double[] { 0, 2, 4, 6, 9 }, new double[] { -1, 6, 4, 0, 4 });
-	chart.addSeries("c", new double[] { 0, 1, 3, 8, 9 }, new double[] { -2, -1, 1, 0, 1 });
+	XYSeries chartSeries = chart.addSeries("INTC", xData, yData);
+	chartSeries.setLineStyle(SeriesLines.SOLID);
+	chartSeries.setMarker(SeriesMarkers.NONE);
 
 
 	SwingUtilities.invokeLater(new Runnable() {
@@ -43,17 +62,15 @@ public class MainShit {
 	    public void run() {
 
 		// Create and set up the window.
-		JFrame frame = new JFrame("Advanced Example");
+		JFrame frame = new JFrame("ztokkit");
+		frame.setPreferredSize(new Dimension(1300, 900));
 		frame.setLayout(new BorderLayout());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		// chart
-		JPanel chartPanel = new XChartPanel<XYChart>(chart);
+		// charts
+		JPanel chartPanel = new XChartPanel<>(chart);
 		frame.add(chartPanel, BorderLayout.CENTER);
 
-		// label
-		JLabel label = new JLabel("Blah blah blah.", SwingConstants.CENTER);
-		frame.add(label, BorderLayout.SOUTH);
 
 		// Display the window.
 		frame.pack();

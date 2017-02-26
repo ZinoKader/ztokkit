@@ -1,8 +1,9 @@
 import java.time.LocalDate;
+import java.util.Date;
 
 public class HistoricalStock {
 
-    private LocalDate date = null;
+    private Date date = null;
     private double open;
     private double close;
     private double high;
@@ -10,11 +11,11 @@ public class HistoricalStock {
     private double volume;
     private double adjustedClose;
 
-    public LocalDate getDate() {
+    public Date getDate() {
 	return date;
     }
 
-    public void setDate(final LocalDate date) {
+    public void setDate(final Date date) {
 	this.date = date;
     }
 
